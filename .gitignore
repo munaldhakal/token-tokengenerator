@@ -28,5 +28,5 @@
 ####Files and Folders####
 /uploads
 /logs/
-src/main/resources/jwt.jks
+####src/main/resources/jwt.jks
 src/main/resources/data.sql
