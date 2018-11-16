@@ -75,7 +75,13 @@ public class Oauth2AuthenticationServer extends AuthorizationServerConfigurerAda
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.tokenStore(tokenStore()).tokenEnhancer(jwtAccessTokenConverter())
+        endpoints
+               // .pathMapping("/oauth/token", "/tokenGenerator/api/v1/oauth/token")// here
+               // .pathMapping("/oauth/check_token", "/tokenGenerator/api/v1/oauth/check_token")// here
+               // .pathMapping("/oauth/confirm_access", "/tokenGenerator/api/v1/oauth/confirm_access")// here
+               // .pathMapping("/oauth/error", "/tokenGenerator/api/v1/oauth/error")// here
+               // .pathMapping("/oauth/token", "/tokenGenerator/api/v1/oauth/token")// here
+                .tokenStore(tokenStore()).tokenEnhancer(jwtAccessTokenConverter())
                 .authenticationManager(authenticationManager).userDetailsService(userService);
         if (checkUserScopes)
             endpoints.requestFactory(requestFactory());
