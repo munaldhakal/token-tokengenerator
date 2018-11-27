@@ -3,11 +3,15 @@ package com.enfiny.tokens.tokengenerator.model;
 import com.enfiny.tokens.tokengenerator.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.*;
+import org.hibernate.engine.FetchStyle;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.*;
 
 @Entity
@@ -25,9 +29,11 @@ public class Client implements ClientDetails {
     private Date createdDate;
     private Date modifiedDate;
     @OneToMany(mappedBy = "client")
+    //@Fetch(value = FetchMode.SUBSELECT)
+    //@LazyCollection(LazyCollectionOption.FALSE)
     private List<App> app;
-    @OneToMany(mappedBy = "client")
-    private List<User> user;
+    //@OneToMany(mappedBy = "client")
+    //private List<User> user;
 
     public Long getId() {
         return id;
@@ -95,13 +101,13 @@ public class Client implements ClientDetails {
         this.app = app;
     }
 
-    public List<User> getUser() {
-        return user;
-    }
+//    public List<User> getUser() {
+//        return user;
+//    }
 
-    public void setUser(List<User> user) {
-        this.user = user;
-    }
+//    public void setUser(List<User> user) {
+//        this.user = user;
+//    }
 
     @Override
     public String getClientId() {
@@ -111,7 +117,9 @@ public class Client implements ClientDetails {
     @Override
     public Set<String> getResourceIds() {
         Set<String> resourceIds = new HashSet<>();
-        app.forEach(app1 -> resourceIds.add(app1.getId().toString()));
+        //app.forEach(app1 ->
+                resourceIds.add("99");
+    //);
         return resourceIds;
     }
 
@@ -156,18 +164,27 @@ public class Client implements ClientDetails {
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        app.forEach(app1 -> app1.getGrantAccess().forEach(grantAccess -> grantAccess.getAuthority().forEach(authority -> grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority())))));
+        System.out.println("----->>>>>I am Before");
+        System.out.println("--->>>>>>Hello0");
+        //System.out.println("---->>>>>>>>"+app);
+        //app.forEach(app1 -> app1.getGrantAccess().forEach(grantAccess -> grantAccess.getAuthority().forEach(authority -> grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority())))));
+        grantedAuthorities.add(new SimpleGrantedAuthority("ACTIONS_USER"));
+        grantedAuthorities.add(new SimpleGrantedAuthority("ACTIONS_APP"));
+        grantedAuthorities.add(new SimpleGrantedAuthority("ACTIONS_GRANT"));
+        grantedAuthorities.add(new SimpleGrantedAuthority("ACTIONS_AUTHORITY"));
+        grantedAuthorities.add(new SimpleGrantedAuthority("ACTIONS_CLIENT"));
+        System.out.println("----------->>>I am after");
         return grantedAuthorities;
     }
 
     @Override
     public Integer getAccessTokenValiditySeconds() {
-        return 900;
+        return 3600;
     }
 
     @Override
     public Integer getRefreshTokenValiditySeconds() {
-        return 3600;
+        return -1;
     }
 
     @Override

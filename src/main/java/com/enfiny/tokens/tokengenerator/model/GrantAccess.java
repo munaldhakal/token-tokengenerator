@@ -1,6 +1,10 @@
 package com.enfiny.tokens.tokengenerator.model;
 
 import com.enfiny.tokens.tokengenerator.enums.GrantType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +21,10 @@ public class GrantAccess implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "app_id")
     private App app;
-    @OneToMany(mappedBy = "grantAccess")
+    @OneToMany(mappedBy = "grantAccess",fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+   // @Fetch(value = FetchMode.JOIN)
+   //@LazyCollection(LazyCollectionOption.FALSE)
     private List<Authority> authority;
     @OneToMany(mappedBy = "grantAccess")
     private List<User> user;

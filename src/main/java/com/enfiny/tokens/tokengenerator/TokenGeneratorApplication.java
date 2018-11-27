@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -46,5 +47,9 @@ public class TokenGeneratorApplication {
                         .allowedOrigins("http://localhost:8081");
             }
         };
+    }
+    @Bean
+    public RestTemplate rest() {
+        return new RestTemplate();
     }
 }

@@ -59,9 +59,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		System.out.println("Checking User");
+		System.out.println("$$$####################################Checking User");
 		auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-		System.out.println("User checked");
+		System.out.println("$$$####################################User checked");
 	}
 
 }

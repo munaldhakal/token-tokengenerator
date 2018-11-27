@@ -34,13 +34,13 @@ public class ClientService implements ClientDetailsService {
     private AuthorityRepository authorityRepository;
 
     @Override
-    @Transactional
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
         System.out.println("-->>>Inside Override client");
-        Client client = clientRepository.findByUsernameAndStatus(clientId,Status.ACTIVE);
-        if(client==null)
-            throw new NotFoundException("No client found of username: "+clientId);
-        client.getApp().forEach(app -> app.getGrantAccess().forEach(grantAccess -> grantAccess.getAuthority().forEach(authority -> authority.getAuthority())));
+	Client client = clientRepository.findByUsernameAndStatus(clientId,Status.ACTIVE);
+         if(client==null)
+		System.out.println("No client found of username: "+clientId);
+        System.out.println("--->>>>>>>>>Headache");
+        //client.getApp().forEach(app -> app.getGrantAccess().forEach(grantAccess -> grantAccess.getAuthority().forEach(authority -> authority.getAuthority())));
         return client;
     }
 
@@ -67,28 +67,29 @@ public class ClientService implements ClientDetailsService {
         Authority authorityToSave2 = new Authority();
         Authority authorityToSave3 = new Authority();
         Authority authorityToSave4 = new Authority();
-//        User user = null;
+        User user = null;
         try{
-//            Client client1 = clientRepository.getOne(1L);
-//            App app = getAppByClient(1L,client1);
-//            user = userRepository.findByAppAndUsernameAndStatus(app,dto.getUsername(), Status.ACTIVE);
-//            if(user!=null)
-//                throw new AlreadyExistsException("User with username: "+dto.getUsername()+" already exists.");
-//            user = new User();
-//            user.setAccountNonExpired(true);
-//            user.setAccountNonLocked(true);
-//            user.setApp(app);
-//            user.setClient(client);
-//            user.setCredentialsNonExpired(true);
-//            user.setEnabled(true);
-//            user.setUsername(dto.getUsername());
-//            if(dto.getEmail()!=null)
-//                user.setEmail(dto.getEmail());
-//            user.setPassword("{bcrypt}"+ BCrypt.hashpw(dto.getSecret(),BCrypt.gensalt()));
-//            user.setStatus(Status.ACTIVE);
-//            GrantAccess grantAccess = grantAccessRepository.getOne(1L);
-//            user.setGrantAccess(grantAccess);
-//            user = userRepository.save(user);
+            /*Client client1 = clientRepository.getOne(1L);
+            App app = appRepository.getOne(1L);
+            user = userRepository.findByAppAndUsernameAndStatus(app,dto.getUsername(), Status.ACTIVE);
+            if(user!=null)
+                throw new AlreadyExistsException("User with username: "+dto.getUsername()+" already exists.");
+            user = new User();
+            user.setAccountNonExpired(true);
+            user.setAccountNonLocked(true);
+            user.setApp(app);
+         //   user.setClient(client);
+            user.setCredentialsNonExpired(true);
+            user.setEnabled(true);
+            user.setUsername(dto.getUsername());
+            if(dto.getEmail()!=null)
+                user.setEmail(dto.getEmail());
+            user.setPassword("{bcrypt}"+ BCrypt.hashpw(dto.getSecret(),BCrypt.gensalt()));
+            user.setStatus(Status.ACTIVE);
+            GrantAccess grantAccess = grantAccessRepository.getOne(1L);
+            user.setGrantAccess(grantAccess);
+            user = userRepository.save(user);*/
+
             appToSave.setStatus(Status.ACTIVE);
             appToSave.setAppName("APP_DEFAULT");
             appToSave.setClient(client);
@@ -112,6 +113,7 @@ public class ClientService implements ClientDetailsService {
             authorityToSave4.setAuthority("ACTIONS_CLIENT");
             authorityToSave4.setGrantAccess(grantAccessToSave);
             authorityRepository.save(authorityToSave4);
+            userToSave.setApp(appToSave);
             userToSave.setUsername(client.getUsername());
             userToSave.setStatus(Status.ACTIVE);
             userToSave.setUsername(client.getUsername());
@@ -122,7 +124,7 @@ public class ClientService implements ClientDetailsService {
             userToSave.setGrantAccess(grantAccessToSave);
             userToSave.setEmail(client.getEmail());
             userToSave.setPassword(client.getSecret());
-            userToSave.setClient(client);
+           // userToSave.setClient(client);
             userRepository.save(userToSave);
         }catch(Exception e){
             e.printStackTrace();
@@ -138,18 +140,18 @@ public class ClientService implements ClientDetailsService {
             userRepository.delete(userToSave);
         }
     }
-//    private App getAppByClient(Long appId, Client client) {
-//        App app = getAppById(appId);
-//        if(!app.getClient().getId().equals(client.getId()))
-//            throw new UnAuthorizedException("You are not authorized to create user.");
-//        return  app;
-//    }
-//    private App getAppById(Long appId) {
-//        App app = appRepository.getOne(appId);
-//        if(app == null)
-//            throw new NotFoundException("No app found.");
-//        return  app;
-//    }
+    private App getAppByClient(Long appId, Client client) {
+        App app = getAppById(appId);
+        if(!app.getClient().getId().equals(client.getId()))
+            throw new UnAuthorizedException("You are not authorized to create user.");
+        return  app;
+    }
+    private App getAppById(Long appId) {
+        App app = appRepository.getOne(appId);
+        if(app == null)
+            throw new NotFoundException("No app found.");
+        return  app;
+    }
     private void checkSecretLength(String secret) {
         if (secret.length() < 8)
             throw new InvalidLengthException("Secret length must be greater than or equal to 8");

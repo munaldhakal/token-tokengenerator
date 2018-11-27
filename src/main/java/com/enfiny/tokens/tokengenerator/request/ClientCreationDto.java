@@ -7,6 +7,8 @@ public class ClientCreationDto {
     private String username;
     @NotNull(message = "Secret cannot be null")
     private String secret;
+    @NotNull( message = "DomainName cannot be null")
+    private String domainName;
     private String email;
 
     public String getUsername() {
@@ -31,5 +33,13 @@ public class ClientCreationDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
     }
 }

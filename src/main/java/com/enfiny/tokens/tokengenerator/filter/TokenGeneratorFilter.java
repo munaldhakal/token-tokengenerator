@@ -25,6 +25,7 @@ import java.util.Map;
 public class TokenGeneratorFilter implements Filter {
     private static final Logger LOG = LoggerFactory.getLogger(TokenGeneratorFilter.class);
     private Long clientId;
+    private Long appId;
 
     @Override
     public void destroy() {
@@ -56,6 +57,9 @@ public class TokenGeneratorFilter implements Filter {
         String clientId = request.getHeader("clientId");
         if(clientId!=null&&!clientId.equals(""))
             this.clientId = Long.parseLong(clientId);
+        String appId = request.getHeader("appId");
+        if(appId!=null&&appId.isEmpty())
+            this.appId = Long.parseLong(appId);
         filterChain.doFilter(req, response);
 
     }
@@ -69,4 +73,5 @@ public class TokenGeneratorFilter implements Filter {
     public Long getClientId() {
         return clientId;
     }
+    public Long getAppId() { return appId; }
 }

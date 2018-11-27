@@ -2,6 +2,10 @@ package com.enfiny.tokens.tokengenerator.model;
 
 import com.enfiny.tokens.tokengenerator.enums.Status;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,13 +29,16 @@ public class User implements UserDetails {
     private String email;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id")
-    private Client client;
+   // @ManyToOne(fetch = FetchType.LAZY)
+  //  @LazyCollection(LazyCollectionOption.TRUE)
+  //  @JoinColumn(name = "client_id")
+   // private Client client;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "app_id")
     private App app;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.JOIN)
+    //@LazyCollection(LazyCollectionOption.TRUE)
     @JoinColumn(name = "grant_id")
     private GrantAccess grantAccess;
     @Column(name = "enabled")
@@ -86,13 +93,13 @@ public class User implements UserDetails {
         this.status = status;
     }
 
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
+//    public Client getClient() {
+//        return client;
+//    }
+//
+//    public void setClient(Client client) {
+//        this.client = client;
+//    }
 
     public GrantAccess getGrantAccess() {
         return grantAccess;
